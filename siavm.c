@@ -22,14 +22,10 @@ int main(int argc, char** argv)
     int flag = 1;
     while(flag)
     {
-      // Call Fetch, pass in the byte array, the address of the program counter, and the address of the flag.
       fetch(bytes, &programCounter, &flag, buffer);
-      // Call Dispatch. Dispatch will execute the instruction that was previously fetched from "fetch".
+      printf("Current Instruction to Dispatch: %02x %02x\n", buffer[0], buffer[1]);
       dispatch(buffer, &OP1, &OP2, REGISTERS);
       execute(buffer, &OP1, &OP2, &RESULT, REGISTERS);
-
-      // Call Execute.
-      // Call Store.
     }
   }
   return 0;
@@ -62,21 +58,6 @@ void fetch(unsigned char * bytes, int * pCounter, int * flag, unsigned char * bu
       (*pCounter)++; // Increment the program counter by 1.
       (*flag)--; // Decrement flag, indicating to stop the program.
       break;
-    case 1: // ADD
-    case 2: // AND
-    case 3: // DIVIDE
-    case 4: // MULTIPLY
-    case 5: // SUBTRACT
-    case 6: // OR
-    case 7: // RIGHTSHIFT, LEFTSHIFT (SFT)
-    case 8: // INTERRUPT
-    case 9: // If the instruction is ADDIMMEDIATE, read 2 bytes.
-    case 14: // LOAD
-    case 15: // STORE
-      buffer[0] = bytes[*pCounter];
-      buffer[1] = bytes[++(*pCounter)];
-      (*pCounter)++; // Go to the next byte.
-      break;
     case 10: // BRANCHIFEQUAL
     case 11: // BRANCHIFLESS
     case 12: // JUMP
@@ -87,49 +68,59 @@ void fetch(unsigned char * bytes, int * pCounter, int * flag, unsigned char * bu
       buffer[3] = bytes[++(*pCounter)];
       (*pCounter)++; // Go to the next byte.
       break;
+    default: // Default Case will handle all of the 2 byte instructions.
+      buffer[0] = bytes[*pCounter];
+      buffer[1] = bytes[++(*pCounter)];
+      (*pCounter)++; // Go to the next byte.
+      break;
   }
 }
 // Dispatch is responsible for reading the bytes from the buffer array we created and allocated in Fetch
 // Populate OP1 and OP2
 void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS)
 {
-  int tempOne, tempTwo;
   int instruction = buffer[0] >> 4;
+  int offset;
+  int bit;
   switch(instruction)
   {
-    case 1: // ADD
-    case 2: // AND
-    case 3: // DIVIDE
-    case 4: // MULTIPLY
-    case 5: // SUBTRACT
-    case 6: // OR
-      //*OP1 = 0x0F & buffer[0]; // Get the register number.
-      // We want to get the register number, and get the value of that register.
-      tempOne = 0x0F & buffer[0]; // Get the register number.
-      tempTwo = (0xF0 & buffer[1]) >> 4; // Get the second register number.
-      printf("REG: %x %x\n", tempOne, tempTwo);
-      *OP1 = REGISTERS[tempOne];
-      *OP2 = REGISTERS[tempTwo];
+    case 0: // HALT
       break;
     case 7: // RIGHTSHIFT, LEFTSHIFT (SFT)
-    case 8: // INTERRUPT
     case 9: // ADDIMMEDIATE
-      tempOne = (0x0F) & buffer[0];
-      *OP1 = REGISTERS[tempOne]; // The value at the specified register.
+      *OP1 = REGISTERS[(0x0F) & buffer[0]]; // The value at the specified register.
       *OP2 = buffer[1]; // The value to add.
-    break;
+      break;
+    case 8: // INTERRUPT
+      // Not sure what to do for Interrupt.
+      break;
     case 14: // LOAD
     case 15: // STORE
       *OP1 = 0x0F & buffer[0]; // Get lower 4 bits by logical ANDing 0x0F with buffer[0]
       *OP2 = (0xF0 & buffer[1]) >> 4; // AND 0xF) with buffer[1] to get top 4 bits, and right shift by 4 to remove 0's.
-    break;
-    case 10:
+      break;
+    case 10: // Branchifless and Branchifequal
     case 11:
-    case 12:
-    case 13:
-
+      *OP1 = REGISTERS[buffer[0] & (0x0F)];
+      *OP2 = REGISTERS[(buffer[1] & 0xF0) >> 4];
+      bit = (buffer[1] & 0x0F) >> 3;
+      offset = ((((buffer[1] & 0x0F) << 8) | buffer[2]) << 8) | buffer[3];
+      if(bit) // If bit is 1, then it's negative.
+      {
+        offset = (~(offset-1)) & ((1<<20)-1);
+        offset -= (offset*2);
+      }
+      break;
+    case 12: // JUMP
+    case 13: // ITERATEOVER
+      break;
+    default: // Handles OPCODES 1 to 6.
+      *OP1 = REGISTERS[0x0F & buffer[0]];
+      *OP2 = REGISTERS[(0xF0 & buffer[1]) >> 4];
+      printf("Register: %d has value %d\nRegister: %d has value %d\n", (0x0F & buffer[0]), *OP1, ((0xF0 & buffer[1]) >> 4 ), *OP2);
       break;
   }
+
 }
 
 void execute(unsigned char * buffer, int * OP1, int * OP2, int * RESULT, int * REGISTERS)
@@ -145,6 +136,7 @@ void execute(unsigned char * buffer, int * OP1, int * OP2, int * RESULT, int * R
     case 5:
     case 6:
       printf("OPCODE: %d OP1: %d OP2: %d\n", instruction, *OP1, *OP2);
+      *RESULT = *OP1 + *OP2;
     break;
     case 9:
       printf("OP1: %d OP2: %d\n", *OP1, *OP2);
@@ -154,4 +146,9 @@ void execute(unsigned char * buffer, int * OP1, int * OP2, int * RESULT, int * R
       printf("%d\n", REGISTERS[r]);
       break;
   }
+}
+
+void store(unsigned char * buffer, int * RESULT, int * REGISTERS)
+{
+
 }

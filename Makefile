@@ -4,7 +4,7 @@ all:
 assembler:
 	gcc ~/Desktop/C-Assembler/assembler.c -o ~/Desktop/C-Assembler/assembler.o && ~/Desktop/C-Assembler/assembler.o ~/Desktop/C-Assembler/assembly.txt ~/Desktop/C-Assembler/out
 
-reass:
+assemble:
 	~/Desktop/C-Assembler/assembler.o ~/Desktop/C-Assembler/assembly.txt ~/Desktop/C-Assembler/out
 
 vm:
