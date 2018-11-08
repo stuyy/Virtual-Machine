@@ -89,7 +89,20 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS)
     case 7: // RIGHTSHIFT, LEFTSHIFT (SFT)
     case 9: // ADDIMMEDIATE
       *OP1 = REGISTERS[(0x0F) & buffer[0]]; // The value at the specified register.
-      *OP2 = buffer[1]; // The value to add.
+      bit = (buffer[1] & 0xF0) >> 7;
+      printf("Bit: %d\n", bit);
+      offset = buffer[1];
+      if(bit) // if bit = 1
+      {
+        offset = (~(offset-1)) & ((1<<7)-1);
+        offset -= (offset*2);
+        *OP2 = offset;
+      } else {
+        *OP2 = offset;
+      }
+      
+      printf("Offset: %d\n", offset);
+      
       break;
     case 8: // INTERRUPT
       // Not sure what to do for Interrupt.

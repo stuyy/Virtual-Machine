@@ -2,10 +2,10 @@ all:
 	gcc siavm.c -o siavm.o
 
 assembler:
-	gcc ~/Desktop/C-Assembler/assembler.c -o ~/Desktop/C-Assembler/assembler.o && ~/Desktop/C-Assembler/assembler.o ~/Desktop/C-Assembler/assembly.txt ~/Desktop/C-Assembler/out
+	gcc ~/Documents/C-Assembler/assembler.c -o ~/Documents/C-Assembler/assembler.o && ~/Documents/C-Assembler/assembler.o ~/Documents/C-Assembler/assembly.txt ~/Documents/C-Assembler/out
 
 assemble:
-	~/Desktop/C-Assembler/assembler.o ~/Desktop/C-Assembler/assembly.txt ~/Desktop/C-Assembler/out
+	~/Documents/C-Assembler/assembler.o ~/Documents/C-Assembler/assembly.txt ~/Documents/C-Assembler/out
 
 vm:
-	gcc siavm.c -o siavm.o && ./siavm.o ~/Desktop/C-Assembler/out
+	gcc siavm.c -o siavm.o && ./siavm.o ~/Documents/C-Assembler/out
