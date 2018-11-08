@@ -12,7 +12,6 @@ int main(int argc, char** argv)
   int OP1, OP2;
   int RESULT;
   unsigned char buffer[4];
-
   if(argc != 2)
     printf("Invalid amount of arguments.");
 
@@ -23,8 +22,8 @@ int main(int argc, char** argv)
     while(flag)
     {
       fetch(bytes, &programCounter, &flag, buffer);
-      printf("Current Instruction to Dispatch: %02x %02x\n", buffer[0], buffer[1]);
-      dispatch(buffer, &OP1, &OP2, REGISTERS);
+      printf("Current Instruction to Dispatch: %02x %02x %02x %02x\n", buffer[0], buffer[1], buffer[2], buffer[3]);
+      dispatch(buffer, &OP1, &OP2, REGISTERS, bytes);
       execute(buffer, &OP1, &OP2, &RESULT, REGISTERS);
     }
   }
@@ -77,16 +76,25 @@ void fetch(unsigned char * bytes, int * pCounter, int * flag, unsigned char * bu
 }
 // Dispatch is responsible for reading the bytes from the buffer array we created and allocated in Fetch
 // Populate OP1 and OP2
-void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS)
+void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, unsigned char * bytes)
 {
   int instruction = buffer[0] >> 4;
   int offset;
   int bit;
+  int temp;
+  int tempTwo;
   switch(instruction)
   {
     case 0: // HALT
       break;
     case 7: // RIGHTSHIFT, LEFTSHIFT (SFT)
+      temp = buffer[0] & 0x0F;
+      *OP1 = REGISTERS[temp];
+      *OP2 = buffer[1] & 0x1F;
+      break;
+    case 8: // INTERRUPT
+      // Not sure what to do for Interrupt.
+      break;
     case 9: // ADDIMMEDIATE
       *OP1 = REGISTERS[(0x0F) & buffer[0]]; // The value at the specified register.
       bit = (buffer[1] & 0xF0) >> 7;
@@ -100,14 +108,17 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS)
       } else {
         *OP2 = offset;
       }
-      
       printf("Offset: %d\n", offset);
-      
-      break;
-    case 8: // INTERRUPT
-      // Not sure what to do for Interrupt.
       break;
     case 14: // LOAD
+      // load r1 r2 10
+      // Get the value of r2.
+      printf("%02x %02x\n", buffer[0], buffer[1]);
+      temp = (buffer[1] & 0xF0) >> 4; // Get the register number.
+      tempTwo = REGISTERS[temp]; //get the value of the register.
+      *OP1 = 0; // Not sure what OP1 or OP2 would be...
+      *OP2 = tempTwo + (buffer[1] & 0x0F);
+      break;
     case 15: // STORE
       *OP1 = 0x0F & buffer[0]; // Get lower 4 bits by logical ANDing 0x0F with buffer[0]
       *OP2 = (0xF0 & buffer[1]) >> 4; // AND 0xF) with buffer[1] to get top 4 bits, and right shift by 4 to remove 0's.
@@ -125,7 +136,10 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS)
       }
       break;
     case 12: // JUMP
+      printf("Jumping\n");
+      break;
     case 13: // ITERATEOVER
+      printf("Iterateover\n");
       break;
     default: // Handles OPCODES 1 to 6.
       *OP1 = REGISTERS[0x0F & buffer[0]];
@@ -140,6 +154,7 @@ void execute(unsigned char * buffer, int * OP1, int * OP2, int * RESULT, int * R
 {
   int instruction = buffer[0] >> 4;
   int r;
+  int temp;
   switch(instruction)
   {
     case 1:
@@ -150,13 +165,36 @@ void execute(unsigned char * buffer, int * OP1, int * OP2, int * RESULT, int * R
     case 6:
       printf("OPCODE: %d OP1: %d OP2: %d\n", instruction, *OP1, *OP2);
       *RESULT = *OP1 + *OP2;
-    break;
+      break;
+    case 7: // SFT
+      printf("OPCODE: %d OP1: %d OP2: %d\n", instruction, *OP1, *OP2);
+      temp = (buffer[1] & 0xF0) >> 5; // Check the bit to see if it's a right or left shift.
+      if(temp)
+        *RESULT = (*OP1) >> (*OP2);
+      else
+        *RESULT = (*OP1) << (*OP2);
+      printf("RESULT AFTER SHIFT IS %d\n", *RESULT);
+      break;
+    case 8: // interrupt
+      break;
     case 9:
       printf("OP1: %d OP2: %d\n", *OP1, *OP2);
       *RESULT = *OP1 + *OP2;
       r = buffer[0] & 0x0F;
       REGISTERS[r] = *RESULT;
       printf("%d\n", REGISTERS[r]);
+      break;
+    case 10:
+      break;
+    case 11:
+      break;
+    case 12:
+      break;
+    case 13:
+      break;
+    case 14:
+      break;
+    case 15:
       break;
   }
 }
