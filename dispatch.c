@@ -20,21 +20,17 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
     case 9: // ADDIMMEDIATE
         *OP1 = REGISTERS[(0x0F) & buffer[0]]; // The value at the specified register.
         bit = (buffer[1] & 0xF0) >> 7;
-        printf("Bit: %d\n", bit);
         offset = buffer[1];
         if(bit) // if bit = 1
         {
-        offset = (~(offset-1)) & ((1<<7)-1);
-        offset -= (offset*2);
-        *OP2 = offset;
-        } else {
-        *OP2 = offset;
-        }
-        printf("Offset: %d\n", offset);
+            offset = (~(offset-1)) & ((1<<7)-1);
+            offset -= (offset*2);
+            *OP2 = offset;
+        } 
+        else
+            *OP2 = offset;
         break;
     case 14: // LOAD
-        // load r1 r2 10
-        // Get the value of r2.
         printf("%02x %02x\n", buffer[0], buffer[1]);
         temp = (buffer[1] & 0xF0) >> 4; // Get the register number.
         tempTwo = REGISTERS[temp]; //get the value of the register.
@@ -53,8 +49,8 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
         offset = ((((buffer[1] & 0x0F) << 8) | buffer[2]) << 8) | buffer[3];
         if(bit) // If bit is 1, then it's negative.
         {
-        offset = (~(offset-1)) & ((1<<20)-1);
-        offset -= (offset*2);
+            offset = (~(offset-1)) & ((1<<20)-1);
+            offset -= (offset*2);
         }
         break;
     case 12: // JUMP
@@ -66,7 +62,6 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
     default: // Handles OPCODES 1 to 6.
         *OP1 = REGISTERS[0x0F & buffer[0]];
         *OP2 = REGISTERS[(0xF0 & buffer[1]) >> 4];
-        printf("Register: %d has value %d\nRegister: %d has value %d\n", (0x0F & buffer[0]), *OP1, ((0xF0 & buffer[1]) >> 4 ), *OP2);
         break;
     }
 }
