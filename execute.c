@@ -35,11 +35,7 @@ void execute(unsigned char * buffer, int * OP1, int * OP2, int * RESULT, int * R
         case 8: // interrupt
             break;
         case 9:
-            printf("OP1: %d OP2: %d\n", *OP1, *OP2);
             *RESULT = *OP1 + *OP2;
-            r = buffer[0] & 0x0F;
-            REGISTERS[r] = *RESULT;
-            printf("%d\n", REGISTERS[r]);
             break;
         case 10:
             break;
