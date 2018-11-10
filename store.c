@@ -1,6 +1,5 @@
-void store(unsigned char * buffer, int * RESULT, int * REGISTERS)
+void store(unsigned char * buffer, int * RESULT, int * REGISTERS, int * reg)
 {
-    printf("RESULT: %d\n", *RESULT);
     int instruction = buffer[0] >> 4;
     int temp;
     switch(instruction)
@@ -18,6 +17,18 @@ void store(unsigned char * buffer, int * RESULT, int * REGISTERS)
         case 9:
             temp = buffer[0] & 0x0F;
             REGISTERS[temp] = *RESULT;
+            printf("%d\n", REGISTERS[temp]);
             break;
+        case 10:
+        case 11:
+        case 12:
+        case 13:
+        case 14:
+            printf("Loading %d into Register %d\n", *RESULT, *reg);
+            REGISTERS[*reg] = *RESULT;
+            break;
+        case 15:
+            break;
+    
     }
 }

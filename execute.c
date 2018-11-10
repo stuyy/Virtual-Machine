@@ -3,6 +3,7 @@ void execute(unsigned char * buffer, int * OP1, int * OP2, int * RESULT, int * R
     int instruction = buffer[0] >> 4;
     int r;
     int temp;
+    int bit;
     switch(instruction)
     {
         case 1: // adding
@@ -38,14 +39,19 @@ void execute(unsigned char * buffer, int * OP1, int * OP2, int * RESULT, int * R
             *RESULT = *OP1 + *OP2;
             break;
         case 10:
-            break;
         case 11:
+            // Calculate the offset here?
+            bit = (buffer[1] & 0x0F) >> 3;
+            
             break;
         case 12:
             break;
         case 13:
             break;
         case 14:
+            printf("Loading..\n");
+            *RESULT = *OP2;
+            printf("RESULT %d\n", *RESULT);
             break;
         case 15:
             break;

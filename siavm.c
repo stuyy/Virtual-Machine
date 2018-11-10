@@ -37,13 +37,14 @@ int main(int argc, char** argv)
     int byteCount = readFile(argv[1], bytes);
     //printf("The number of bytes read were: %d\n", byteCount);
     int flag = 1;
+    int reg = -1;
     while(flag)
     {
       fetch(bytes, &programCounter, &flag, buffer);
       printf("Current Instruction to Dispatch: %02x %02x %02x %02x\n", buffer[0], buffer[1], buffer[2], buffer[3]);
-      dispatch(buffer, &OP1, &OP2, REGISTERS, bytes);
+      dispatch(buffer, &OP1, &OP2, REGISTERS, bytes, &reg);
       execute(buffer, &OP1, &OP2, &RESULT, REGISTERS);
-      store(buffer, &RESULT, REGISTERS);
+      store(buffer, &RESULT, REGISTERS, &reg);
     }
   }
   return 0;
