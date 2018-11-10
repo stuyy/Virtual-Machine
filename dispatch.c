@@ -1,4 +1,4 @@
-void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, unsigned char * bytes, int * reg)
+void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, unsigned char * bytes, int * reg, int byteCount)
 {
     int instruction = buffer[0] >> 4;
     int offset;
@@ -17,6 +17,20 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
             break;
         case 8: // INTERRUPT
             // Not sure what to do for Interrupt.
+            //*OP1 = buffer[0] & 0xF;
+            temp = 0;
+            if(buffer[1] == 0)
+                while(temp<16)
+                {
+                    printf("Register %d: %d\n", temp, REGISTERS[temp]);
+                    temp++;
+                }
+            else if(buffer[1] == 1)
+                while(temp<byteCount)
+                {
+                    printf("Memory Address %d: %02x\n", temp, bytes[temp]);
+                    temp++;
+                }
             break;
         case 9: // ADDIMMEDIATE
             *OP1 = REGISTERS[(0x0F) & buffer[0]]; // The value at the specified register.
