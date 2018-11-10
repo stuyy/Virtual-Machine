@@ -45,6 +45,7 @@ void execute(unsigned char * buffer, int * OP1, int * OP2, int * RESULT, int * R
             
             break;
         case 12:
+            *RESULT = *OP1;
             break;
         case 13:
             break;

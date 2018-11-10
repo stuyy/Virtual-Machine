@@ -1,4 +1,4 @@
-void store(unsigned char * buffer, int * RESULT, int * REGISTERS, int * reg)
+void store(unsigned char * buffer, int * RESULT, int * REGISTERS, int * reg, int * pc)
 {
     int instruction = buffer[0] >> 4;
     int temp;
@@ -20,12 +20,18 @@ void store(unsigned char * buffer, int * RESULT, int * REGISTERS, int * reg)
             printf("%d\n", REGISTERS[temp]);
             break;
         case 10:
+            break;
         case 11:
+            break;
         case 12:
+            *pc = *RESULT; // Set the program counter to where we are jumping.
+            break;
         case 13:
+            break;
         case 14:
-            printf("Loading %d into Register %d\n", *RESULT, *reg);
             REGISTERS[*reg] = *RESULT;
+
+            printf("Register %d has the value %d\n", *reg, REGISTERS[*reg]);
             break;
         case 15:
             break;

@@ -42,9 +42,10 @@ int main(int argc, char** argv)
     {
       fetch(bytes, &programCounter, &flag, buffer);
       printf("Current Instruction to Dispatch: %02x %02x %02x %02x\n", buffer[0], buffer[1], buffer[2], buffer[3]);
+      printf("Program Counter = %d\n", programCounter);
       dispatch(buffer, &OP1, &OP2, REGISTERS, bytes, &reg);
       execute(buffer, &OP1, &OP2, &RESULT, REGISTERS);
-      store(buffer, &RESULT, REGISTERS, &reg);
+      store(buffer, &RESULT, REGISTERS, &reg, &programCounter);
     }
   }
   return 0;

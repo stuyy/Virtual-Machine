@@ -45,6 +45,12 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
             break;
         case 12: // JUMP
             printf("Jumping\n");
+            // If number is greater than 1<<28
+            // 4 byte instruction.
+            offset = ((((((buffer[0] & 0xF) << 8) | buffer[1]) << 8) | buffer[2]) << 8) | buffer[3];
+            
+            printf("%d\n", offset);
+            *OP1 = *OP2 = offset;
             break;
         case 13: // ITERATEOVER
             printf("Iterateover\n");
@@ -56,12 +62,12 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
 
             offset = buffer[1] & 0x0F;
             bit = (buffer[1] & 0x0F) >> 3;
+            
             if(bit)
             {
                 offset = (~(offset-1)) & ((1<<3)-1);
                 offset -= offset*2;
             }
-            printf("Offset is: %d\n", offset);
             *OP2 = tempTwo + offset;
             *reg = buffer[0] & 0x0F;
             // I think I have it, I'm just not sure what the OPERANDS will be for LOAD.
