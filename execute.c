@@ -4,6 +4,8 @@ void execute(unsigned char * buffer, int * OP1, int * OP2, int * RESULT, int * R
     int r;
     int temp;
     int bit;
+    int offset;
+    printf("The instruction is: %d\n", instruction);
     switch(instruction)
     {
         case 0:
@@ -40,11 +42,18 @@ void execute(unsigned char * buffer, int * OP1, int * OP2, int * RESULT, int * R
         case 9: 
             *RESULT = *OP1 + *OP2;
             break;
-        case 10:
-        case 11:
+        case 10: // BRANCHIFEQUAL
+            if(*OP1 == *OP2)
+                *RESULT = 1;
+            else
+                *RESULT = 0;
+            break;
+        case 11: // BRANCHIFLESS
             // Calculate the offset here?
-            bit = (buffer[1] & 0x0F) >> 3;
-            
+            if(*OP1 < *OP2)
+                *RESULT = 1;
+            else
+                *RESULT = 0;
             break;
         case 12:
             *RESULT = *OP1;

@@ -2,7 +2,8 @@ void store(unsigned char * buffer, int * RESULT, int * REGISTERS, int * reg, int
 {
     int instruction = buffer[0] >> 4;
     int temp;
-    printf("The instruction is: %d\n", instruction);
+    int bit;
+    int offset;
     switch(instruction)
     {
         // Get the register, and store the result into it.
@@ -27,9 +28,37 @@ void store(unsigned char * buffer, int * RESULT, int * REGISTERS, int * reg, int
             REGISTERS[temp] = *RESULT;
             //printf("%d\n", REGISTERS[temp]);
             break;
-        case 10:
+        case 10: // BRANCHIFEQUAL
+            bit = (buffer[1] & 0x0F) >> 3;
+            offset = ((((buffer[1] & 0x0F) << 8) | buffer[2]) << 8) | buffer[3];
+            printf("Program Counter is currently: %d\n", *pc);
+            if(bit) // If bit is 1, then it's negative.
+            {
+                offset = (~(offset-1)) & ((1<<20)-1);
+                offset -= (offset*2);
+                if(*RESULT)
+                    *pc += offset;
+            }
+            else {
+                *pc += offset;
+            }
+            printf("Program Counter is now: %d\n", *pc);
             break;
-        case 11:
+        case 11: // BRANCHIFLESS
+            bit = (buffer[1] & 0x0F) >> 3;
+            offset = ((((buffer[1] & 0x0F) << 8) | buffer[2]) << 8) | buffer[3];
+            printf("Program Counter is currently: %d\n", *pc);
+            if(bit) // If bit is 1, then it's negative.
+            {
+                offset = (~(offset-1)) & ((1<<20)-1);
+                offset -= (offset*2);
+                if(*RESULT)
+                    *pc += offset;
+            }
+            else {
+                *pc += offset;
+            }
+            printf("Program Counter is now: %d\n", *pc);
             break;
         case 12:
             *pc = *RESULT; // Set the program counter to where we are jumping.

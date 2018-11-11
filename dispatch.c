@@ -49,13 +49,14 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
         case 11:
             *OP1 = REGISTERS[buffer[0] & (0x0F)]; // get the value of register 1
             *OP2 = REGISTERS[(buffer[1] & 0xF0) >> 4]; // get the value of register 2.
+            /*
             bit = (buffer[1] & 0x0F) >> 3;
             offset = ((((buffer[1] & 0x0F) << 8) | buffer[2]) << 8) | buffer[3];
             if(bit) // If bit is 1, then it's negative.
             {
                 offset = (~(offset-1)) & ((1<<20)-1);
                 offset -= (offset*2);
-            }
+            }*/
             break;
         case 12: // JUMP
             printf("Jumping\n");
