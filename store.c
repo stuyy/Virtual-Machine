@@ -14,6 +14,10 @@ void store(unsigned char * buffer, int * RESULT, int * REGISTERS, int * reg, int
             temp = buffer[1] & 0x0F;
             REGISTERS[temp] = *RESULT;
             break;
+        case 7:
+            temp = buffer[0] & 0xF; // Get the register.
+            REGISTERS[temp] = *RESULT;
+            break;
         case 9:
             temp = buffer[0] & 0x0F;
             REGISTERS[temp] = *RESULT;
