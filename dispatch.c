@@ -26,9 +26,9 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
                     temp++;
                 }
             else if(buffer[1] == 1)
-                while(temp<byteCount)
+                while(temp<1000)
                 {
-                    printf("%08d: %02x\n", temp, bytes[temp]);
+                    printf("%08x: %02x\n", temp, bytes[temp]);
                     temp++;
                 }
             break;
@@ -49,14 +49,6 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
         case 11:
             *OP1 = REGISTERS[buffer[0] & (0x0F)]; // get the value of register 1
             *OP2 = REGISTERS[(buffer[1] & 0xF0) >> 4]; // get the value of register 2.
-            /*
-            bit = (buffer[1] & 0x0F) >> 3;
-            offset = ((((buffer[1] & 0x0F) << 8) | buffer[2]) << 8) | buffer[3];
-            if(bit) // If bit is 1, then it's negative.
-            {
-                offset = (~(offset-1)) & ((1<<20)-1);
-                offset -= (offset*2);
-            }*/
             break;
         case 12: // JUMP
             printf("Jumping\n");
@@ -86,8 +78,12 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
             // I think I have it, I'm just not sure what the OPERANDS will be for LOAD.
             break;
         case 15: // STORE
-            *OP1 = 0x0F & buffer[0]; // Get lower 4 bits by logical ANDing 0x0F with buffer[0]
-            *OP2 = (0xF0 & buffer[1]) >> 4; // AND 0xF) with buffer[1] to get top 4 bits, and right shift by 4 to remove 0's.
+            //*OP1 = 0x0F & buffer[0]; // Get lower 4 bits by logical ANDing 0x0F with buffer[0]
+            //*OP2 = (0xF0 & buffer[1]) >> 4; // AND 0xF) with buffer[1] to get top 4 bits, and right shift by 4 to remove 0's.
+            temp = 0xF & buffer[0]; // Register to Store our Value
+            tempTwo = (0xF0 & buffer[1]) >> 4;
+            // We need the value of the 2nd register.
+            //*OP2 = REGISTERS[tempTwo];
             break;
         default: // Handles OPCODES 1 to 6.
             *OP1 = REGISTERS[0x0F & buffer[0]];

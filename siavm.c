@@ -23,7 +23,7 @@ int readFile(char * fileName, unsigned char bytes[]) // This process is loading 
 
 int main(int argc, char** argv)
 {
-  unsigned char bytes[10000]; // Allocate 10000 bytes to the unsigned char array.
+  unsigned char bytes[10000] = {0}; // Allocate 10000 bytes to the unsigned char array.
 
   // CPU Infrastructure
   int REGISTERS[16] = {0}; // 16 Registers
