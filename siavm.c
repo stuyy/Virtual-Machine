@@ -20,7 +20,6 @@ int readFile(char * fileName, unsigned char bytes[]) // This process is loading 
   printf("Bytes: %d\n", i);
   return i; // Return the total number of bytes read.
 }
-
 int main(int argc, char** argv)
 {
   unsigned char bytes[10000] = {0}; // Allocate 10000 bytes to the unsigned char array.

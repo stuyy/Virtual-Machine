@@ -8,7 +8,6 @@ void store(unsigned char * buffer, int * RESULT, int * REGISTERS, int * reg, int
     {
         // Get the register, and store the result into it.
         case 0:
-
             break;
         case 1: // add
         case 2: // and
