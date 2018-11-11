@@ -5,11 +5,9 @@ void fetch(unsigned char * bytes, int * pCounter, int * flag, unsigned char * bu
   switch(instruction)
   {
     case 0: // HALT
-      // Allocate 2 bytes for the buffer.
       buffer[0] = bytes[*pCounter]; // Store the first byte into buffer[0] by referencing the bytes array.
       buffer[1] = bytes[++(*pCounter)]; // Store the second byte into buffer[1], increment the pointer counter by 1.
       (*pCounter)++; // Increment the program counter by 1.
-      (*flag)--; // Decrement flag, indicating to stop the program.
       break;
     case 10: // BRANCHIFEQUAL
     case 11: // BRANCHIFLESS

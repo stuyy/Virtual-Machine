@@ -17,6 +17,7 @@ int readFile(char * fileName, unsigned char bytes[]) // This process is loading 
     while((c = fgetc(file)) != EOF)
       bytes[i++] = (unsigned char)c; // Populate the array.
   }
+  printf("Bytes: %d\n", i);
   return i; // Return the total number of bytes read.
 }
 
@@ -35,19 +36,18 @@ int main(int argc, char** argv)
 
   else {
     int byteCount = readFile(argv[1], bytes);
-    //printf("The number of bytes read were: %d\n", byteCount);
+    printf("The number of bytes read were: %d\n", byteCount);
     int flag = 1;
     int reg = -1;
     while(flag)
     {
       fetch(bytes, &programCounter, &flag, buffer);
       printf("Current Instruction to Dispatch: %02x %02x %02x %02x\n", buffer[0], buffer[1], buffer[2], buffer[3]);
-      printf("Program Counter = %d\n", programCounter);
+      //printf("Program Counter = %d\n", programCounter);
       dispatch(buffer, &OP1, &OP2, REGISTERS, bytes, &reg, byteCount);
-      execute(buffer, &OP1, &OP2, &RESULT, REGISTERS);
+      execute(buffer, &OP1, &OP2, &RESULT, REGISTERS, &flag);
       store(buffer, &RESULT, REGISTERS, &reg, &programCounter);
-      printf("The next byte is: %02x\n", bytes[programCounter]);
-
+      //printf("The next byte is: %02x\n", bytes[programCounter]);
     }
   }
   return 0;

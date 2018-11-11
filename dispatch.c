@@ -28,7 +28,7 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
             else if(buffer[1] == 1)
                 while(temp<byteCount)
                 {
-                    printf("Memory Address %d: %02x\n", temp, bytes[temp]);
+                    printf("%08d: %02x\n", temp, bytes[temp]);
                     temp++;
                 }
             break;
@@ -62,8 +62,6 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
             // If number is greater than 1<<28
             // 4 byte instruction.
             offset = ((((((buffer[0] & 0xF) << 8) | buffer[1]) << 8) | buffer[2]) << 8) | buffer[3];
-            
-            printf("%d\n", offset);
             *OP1 = *OP2 = offset;
             break;
         case 13: // ITERATEOVER

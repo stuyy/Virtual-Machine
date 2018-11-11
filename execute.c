@@ -1,4 +1,4 @@
-void execute(unsigned char * buffer, int * OP1, int * OP2, int * RESULT, int * REGISTERS)
+void execute(unsigned char * buffer, int * OP1, int * OP2, int * RESULT, int * REGISTERS, int * flag)
 {
     int instruction = buffer[0] >> 4;
     int r;
@@ -6,6 +6,10 @@ void execute(unsigned char * buffer, int * OP1, int * OP2, int * RESULT, int * R
     int bit;
     switch(instruction)
     {
+        case 0:
+            (*flag)--;
+            printf("Now exiting program.\n");
+            break;
         case 1: // adding
             *RESULT = *OP1 + *OP2;
             break;
@@ -25,17 +29,15 @@ void execute(unsigned char * buffer, int * OP1, int * OP2, int * RESULT, int * R
             *RESULT = (*OP1) | (*OP2);
             break;
         case 7: // SFT
-            printf("OPCODE: %d OP1: %d OP2: %d\n", instruction, *OP1, *OP2);
             temp = (buffer[1] & 0xF0) >> 5; // Check the bit to see if it's a right or left shift.
             if(temp)
-            *RESULT = (*OP1) >> (*OP2);
+                *RESULT = (*OP1) >> (*OP2);
             else
-            *RESULT = (*OP1) << (*OP2);
-            printf("RESULT AFTER SHIFT IS %d\n", *RESULT);
-            break;
+                *RESULT = (*OP1) << (*OP2);
+            break;  
         case 8: // interrupt
             break;
-        case 9:
+        case 9: 
             *RESULT = *OP1 + *OP2;
             break;
         case 10:
@@ -50,9 +52,9 @@ void execute(unsigned char * buffer, int * OP1, int * OP2, int * RESULT, int * R
         case 13:
             break;
         case 14:
-            printf("Loading..\n");
+            //printf("Loading..\n");
             *RESULT = *OP2;
-            printf("RESULT %d\n", *RESULT);
+           // printf("RESULT %d\n", *RESULT);
             break;
         case 15:
             break;
