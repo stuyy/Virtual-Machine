@@ -1,4 +1,4 @@
-void store(unsigned char * buffer, int * RESULT, int * REGISTERS, int * reg, int * pc)
+void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * REGISTERS, int * reg, int * pc)
 {
     int instruction = buffer[0] >> 4;
     int temp;
@@ -69,7 +69,11 @@ void store(unsigned char * buffer, int * RESULT, int * REGISTERS, int * reg, int
         case 14:
             printf("Buffer: %02x %02x\n", buffer[0], buffer[1]);
             break;
-        case 15:
+        case 15: // STORE
+            temp = buffer[0] & 0xF;
+            printf("Register %d Value %d\n", temp, REGISTERS[temp]);
+            printf("MEMORY ADDRESS: %d\n", *RESULT);
+            bytes[*RESULT] = REGISTERS[temp];
             break;
     
     }

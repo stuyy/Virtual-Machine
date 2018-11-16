@@ -26,7 +26,7 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
                     temp++;
                 }
             else if(buffer[1] == 1)
-                while(temp<1000)
+                while(temp<300)
                 {
                     printf("%08x: %02x\n", temp, bytes[temp]);
                     temp++;
@@ -78,10 +78,12 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
             // I think I have it, I'm just not sure what the OPERANDS will be for LOAD.
             break;
         case 15: // STORE
-            //*OP1 = 0x0F & buffer[0]; // Get lower 4 bits by logical ANDing 0x0F with buffer[0]
-            //*OP2 = (0xF0 & buffer[1]) >> 4; // AND 0xF) with buffer[1] to get top 4 bits, and right shift by 4 to remove 0's.
-            temp = 0xF & buffer[0]; // Register to Store our Value
-            tempTwo = (0xF0 & buffer[1]) >> 4;
+            
+            temp = (0xF0 & buffer[1]) >> 4; // Get the register number.
+
+            *OP1 = REGISTERS[temp]; // Get the value of the register that we are going to add the offset to.
+            *OP2 = 0xF & buffer[1];
+            printf("Value: %d Offset: %d\n", *OP1, *OP2);
             // We need the value of the 2nd register.
             //*OP2 = REGISTERS[tempTwo];
             break;

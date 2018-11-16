@@ -45,7 +45,7 @@ int main(int argc, char** argv)
       //printf("Program Counter = %d\n", programCounter);
       dispatch(buffer, &OP1, &OP2, REGISTERS, bytes, &reg, byteCount);
       execute(buffer, &OP1, &OP2, &RESULT, REGISTERS, &flag);
-      store(buffer, &RESULT, REGISTERS, &reg, &programCounter);
+      store(buffer, bytes, &RESULT, REGISTERS, &reg, &programCounter);
       //printf("The next byte is: %02x\n", bytes[programCounter]);
     }
   }
