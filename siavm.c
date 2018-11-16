@@ -29,6 +29,7 @@ int main(int argc, char** argv)
   int programCounter = 0; // Program Counter
   int OP1, OP2;
   int RESULT;
+  int iterater = -2;
   unsigned char buffer[4];
   if(argc != 2)
     printf("Invalid amount of arguments.");
@@ -40,14 +41,15 @@ int main(int argc, char** argv)
     int reg = -1;
     while(flag)
     {
-      fetch(bytes, &programCounter, &flag, buffer);
+      fetch(bytes, &programCounter, &flag, buffer, &iterater);
       printf("Current Instruction to Dispatch: %02x %02x %02x %02x\n", buffer[0], buffer[1], buffer[2], buffer[3]);
       //printf("Program Counter = %d\n", programCounter);
       dispatch(buffer, &OP1, &OP2, REGISTERS, bytes, &reg, byteCount);
       execute(buffer, &OP1, &OP2, &RESULT, REGISTERS, &flag);
-      store(buffer, bytes, &RESULT, REGISTERS, &reg, &programCounter);
+      store(buffer, bytes, &RESULT, REGISTERS, &reg, &programCounter, &iterater);
       //printf("The next byte is: %02x\n", bytes[programCounter]);
     }
+    
   }
   return 0;
 }

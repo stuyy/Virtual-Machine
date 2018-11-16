@@ -1,4 +1,4 @@
-void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * REGISTERS, int * reg, int * pc)
+void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * REGISTERS, int * reg, int * pc, int * iter)
 {
     int instruction = buffer[0] >> 4;
     int temp;
@@ -64,7 +64,8 @@ void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * RE
             //printf("Program Counter is now %d\n", *pc);
             buffer[0] = buffer[1] = buffer[2] = buffer[3] = 0;
             break;
-        case 13:
+        case 13: // ITERATEOVER
+            printf("Iterator: %d\n Program Counter: %d\n", *iter, *pc);
             break;
         case 14:
             printf("Buffer: %02x %02x\n", buffer[0], buffer[1]);

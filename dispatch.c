@@ -59,6 +59,7 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
             break;
         case 13: // ITERATEOVER
             printf("Iterateover\n");
+            
             break;
         case 14: // LOAD
             temp = (buffer[1] & 0xF0) >> 4; // Get the register number.
@@ -80,8 +81,7 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
         case 15: // STORE
             
             temp = (0xF0 & buffer[1]) >> 4; // Get the register number.
-
-            *OP1 = REGISTERS[temp]; // Get the value of the register that we are going to add the offset to.
+            *OP1 = REGISTERS[temp]; // Get the value of the 2nd register.
             *OP2 = 0xF & buffer[1];
             printf("Value: %d Offset: %d\n", *OP1, *OP2);
             // We need the value of the 2nd register.
