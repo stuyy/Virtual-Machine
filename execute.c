@@ -62,8 +62,8 @@ void execute(unsigned char * buffer, int * OP1, int * OP2, int * RESULT, int * R
             break;
         case 14: // LOAD
             //printf("Loading..\n");
-            *RESULT = *OP2;
-           // printf("RESULT %d\n", *RESULT);
+            *RESULT = *OP1 + (*OP2);
+            printf("Loading at %d\n", *RESULT);
             break;
         case 15: // STORE
             *RESULT = *OP1 + *OP2; // Add the offset to the value of 2nd register. We will treat this as a memory address. This is where we will store the value of r1.

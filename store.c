@@ -1,4 +1,4 @@
-void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * REGISTERS, int * reg, int * pc, int * iter)
+void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * REGISTERS, int * pc, int * iter)
 {
     int instruction = buffer[0] >> 4;
     int temp;
@@ -67,8 +67,12 @@ void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * RE
         case 13: // ITERATEOVER
             printf("Iterator: %d\n Program Counter: %d\n", *iter, *pc);
             break;
-        case 14:
-            printf("Buffer: %02x %02x\n", buffer[0], buffer[1]);
+        case 14: // LOAD
+            temp = buffer[0] & 0xF; // This is the register number we will load the value into.
+            printf("VALUE AT %d: %d\n", *RESULT, bytes[*RESULT]);
+            printf("VALUE AT %d: %d\n", *RESULT+1, bytes[*RESULT+1]);
+            printf("VALUE AT %d: %d\n", *RESULT+2, bytes[*RESULT+2]);
+            printf("VALUE AT %d: %d\n", *RESULT+3, bytes[*RESULT+3]);
             break;
         case 15: // STORE
             temp = buffer[0] & 0xF;

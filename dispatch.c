@@ -1,4 +1,4 @@
-void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, unsigned char * bytes, int * reg, int byteCount)
+void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, unsigned char * bytes, int byteCount)
 {
     int instruction = buffer[0] >> 4;
     int offset;
@@ -26,7 +26,7 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
                     temp++;
                 }
             else if(buffer[1] == 1)
-                while(temp<700)
+                while(temp<500)
                 {
                     printf("%08x: %02x\n", temp, bytes[temp]);
                     temp++;
@@ -62,6 +62,19 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
             
             break;
         case 14: // LOAD
+
+            bit = (buffer[1] & 0xF) >> 3;
+            offset = buffer[1] & 0xF;
+
+            if(bit)
+            {
+                offset = (~(offset-1)) & ((1<<3)-1);
+                offset -= offset*2;
+            }
+            temp = (buffer[1] & 0xF0) >> 4;
+            *OP1 = REGISTERS[temp]; // Get the value of the register.
+            *OP2 = offset;
+            /*
             temp = (buffer[1] & 0xF0) >> 4; // Get the register number.
             tempTwo = REGISTERS[temp]; //get the value of the register.
             *OP1 = 0; // Not sure what OP1 or OP2 would be...
@@ -75,8 +88,8 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
                 offset -= offset*2;
             }
             *OP2 = tempTwo + offset;
-            *reg = buffer[0] & 0x0F;
-            // I think I have it, I'm just not sure what the OPERANDS will be for LOAD.
+            *reg = buffer[0] & 0x0F; */
+            printf("Value: %d Offset: %d\n", *OP1, *OP2);
             break;
         case 15: // STORE
             temp = (0xF0 & buffer[1]) >> 4; // Get the register number.
