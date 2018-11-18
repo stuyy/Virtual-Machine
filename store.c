@@ -74,7 +74,12 @@ void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * RE
             temp = buffer[0] & 0xF;
             printf("Register %d Value %d\n", temp, REGISTERS[temp]);
             printf("MEMORY ADDRESS: %d\n", *RESULT);
-            bytes[*RESULT] = REGISTERS[temp];
+            bytes[*RESULT] = (REGISTERS[temp] >> 24) & 0xFF;
+            bytes[*RESULT+1] = (REGISTERS[temp] >> 16) & 0xFF;
+            bytes[*RESULT+2] = (REGISTERS[temp] >> 8) & 0xFF;
+            bytes[*RESULT+3] = REGISTERS[temp] & 0xFF;
+            printf("STORING\n");
+            // At 1276, we want to store 1524
             break;
     
     }

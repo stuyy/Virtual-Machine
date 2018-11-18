@@ -26,7 +26,7 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
                     temp++;
                 }
             else if(buffer[1] == 1)
-                while(temp<300)
+                while(temp<700)
                 {
                     printf("%08x: %02x\n", temp, bytes[temp]);
                     temp++;
@@ -79,13 +79,10 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
             // I think I have it, I'm just not sure what the OPERANDS will be for LOAD.
             break;
         case 15: // STORE
-            
             temp = (0xF0 & buffer[1]) >> 4; // Get the register number.
             *OP1 = REGISTERS[temp]; // Get the value of the 2nd register.
             *OP2 = 0xF & buffer[1];
-            printf("Value: %d Offset: %d\n", *OP1, *OP2);
-            // We need the value of the 2nd register.
-            //*OP2 = REGISTERS[tempTwo];
+            printf("Value of Register %d: %d\n", temp, *OP1);
             break;
         default: // Handles OPCODES 1 to 6.
             *OP1 = REGISTERS[0x0F & buffer[0]];
