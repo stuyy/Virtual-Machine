@@ -33,15 +33,18 @@ void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * RE
             printf("Program Counter is currently: %d\n", *pc);
             if(bit) // If bit is 1, then it's negative.
             {
+                
                 offset = (~(offset-1)) & ((1<<20)-1);
                 offset -= (offset*2);
+                printf("%d\n", offset); // If the offset is negative.
                 if(*RESULT)
                     *pc += offset;
             }
-            else {
-                *pc += offset;
+            else { // If it's positive, subtract 4
+                *pc += (offset-4);
             }
             printf("Program Counter is now: %d\n", *pc);
+            exit(0);
             break;
         case 11: // BRANCHIFLESS
             bit = (buffer[1] & 0x0F) >> 3;
@@ -55,7 +58,7 @@ void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * RE
                     *pc += offset;
             }
             else {
-                *pc += offset;
+                *pc += (offset-4);
             }
             printf("Program Counter is now: %d\n", *pc);
             break;
@@ -69,15 +72,10 @@ void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * RE
             break;
         case 14: // LOAD
             temp = buffer[0] & 0xF; // This is the register number we will load the value into.
-            printf("VALUE AT %d: %d\n", *RESULT, bytes[*RESULT]);
-            printf("VALUE AT %d: %d\n", *RESULT+1, bytes[*RESULT+1]);
-            printf("VALUE AT %d: %d\n", *RESULT+2, bytes[*RESULT+2]);
-            printf("VALUE AT %d: %d\n", *RESULT+3, bytes[*RESULT+3]);
-            break;
+            REGISTERS[temp] = (((bytes[*RESULT] << 8 | bytes[*RESULT+1])) << 16) | ((bytes[*RESULT+2] << 8) | bytes[*RESULT+3]);
+            break;  
         case 15: // STORE
             temp = buffer[0] & 0xF;
-            printf("Register %d Value %d\n", temp, REGISTERS[temp]);
-            printf("MEMORY ADDRESS: %d\n", *RESULT);
             bytes[*RESULT] = (REGISTERS[temp] >> 24) & 0xFF;
             bytes[*RESULT+1] = (REGISTERS[temp] >> 16) & 0xFF;
             bytes[*RESULT+2] = (REGISTERS[temp] >> 8) & 0xFF;
