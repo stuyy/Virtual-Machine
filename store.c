@@ -68,7 +68,14 @@ void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * RE
             buffer[0] = buffer[1] = buffer[2] = buffer[3] = 0;
             break;
         case 13: // ITERATEOVER
-            printf("Iterator: %d\n Program Counter: %d\n", *iter, *pc);
+            printf("ITERATEOVER INSIDE STORE.C\n");
+            printf("We're at %d\n", *RESULT);
+            
+            while(bytes[*RESULT] != 0)
+            {
+                printf("VALUE AT %d IS %d\n", *RESULT, bytes[*RESULT]);
+                *RESULT+=4;
+            }
             break;
         case 14: // LOAD
             temp = buffer[0] & 0xF; // This is the register number we will load the value into.

@@ -26,7 +26,7 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
                     temp++;
                 }
             else if(buffer[1] == 1)
-                while(temp<600)
+                while(temp<100)
                 {
                     printf("%08x: %02x\n", temp, bytes[temp]);
                     temp++;
@@ -59,7 +59,10 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
             break;
         case 13: // ITERATEOVER
             printf("Iterateover\n");
-            
+            printf("%02x %02x %02x %02x\n", buffer[0], buffer[1], buffer[2], buffer[3]);
+            *OP1 = buffer[1]; // The amount of bytes to point to next.
+            *OP2 = (buffer[2] << 8 | buffer[3]); // The amount of bytes to jump back in the Program Counter.
+            printf("Next Offset: %d, Jumping back %d bytes.\n", *OP1, *OP2);
             break;
         case 14: // LOAD
 
@@ -87,7 +90,6 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
             temp = (0xF0 & buffer[1]) >> 4; // Get the register number.
             *OP1 = REGISTERS[temp]; // Get the value of the 2nd register.
             *OP2 = offset;
-            printf("STORING %d with OFFSET: %d\n", *OP1, *OP2);
             break;
         default: // Handles OPCODES 1 to 6.
             *OP1 = REGISTERS[0x0F & buffer[0]];
