@@ -65,7 +65,7 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
             printf("Next Offset: %d, Jumping back %d bytes.\n", *OP1, *OP2);
             break;
         case 14: // LOAD
-
+            printf("LOADING:::::\n");
             bit = (buffer[1] & 0xF) >> 3;
             offset = buffer[1] & 0xF;
 
@@ -77,7 +77,7 @@ void dispatch(unsigned char * buffer, int * OP1, int * OP2, int * REGISTERS, uns
             temp = (buffer[1] & 0xF0) >> 4;
             *OP1 = REGISTERS[temp]; // Get the value of the register.
             *OP2 = offset;
-
+            printf("*OP1: %d *OP2: %d\n", *OP1, *OP2);
             break;
         case 15: // STORE
             bit = (buffer[1] & 0xF) >> 3;

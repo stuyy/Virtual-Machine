@@ -1,4 +1,4 @@
-void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * REGISTERS, int * pc, int * iter)
+void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * REGISTERS, int * pc, int * iter, int * OP2)
 {
     int instruction = buffer[0] >> 4;
     int temp;
@@ -68,13 +68,17 @@ void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * RE
             buffer[0] = buffer[1] = buffer[2] = buffer[3] = 0;
             break;
         case 13: // ITERATEOVER
-            printf("ITERATEOVER INSIDE STORE.C\n");
+            printf("\n\n\n\n");
             printf("We're at %d\n", *RESULT);
-            
-            while(bytes[*RESULT] != 0)
+            temp = buffer[0] & 0xF;
+            printf("Register #%d\n", temp);
+            if(bytes[*RESULT] != 0)
             {
-                printf("VALUE AT %d IS %d\n", *RESULT, bytes[*RESULT]);
-                *RESULT+=4;
+                REGISTERS[temp] = bytes[*RESULT];
+                printf("Jumping back %d instructions\n", *OP2);
+                printf("The program counter is currently %d\n", *pc);
+                *pc = (*pc - 4) - *OP2;
+                printf("program counter is %d\n", *pc);
             }
             break;
         case 14: // LOAD

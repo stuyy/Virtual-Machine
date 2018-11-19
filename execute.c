@@ -5,12 +5,10 @@ void execute(unsigned char * buffer, int * OP1, int * OP2, int * RESULT, int * R
     int temp;
     int bit;
     int offset;
-    printf("The instruction is: %d\n", instruction);
     switch(instruction)
     {
         case 0:
             (*flag)--;
-            printf("Now exiting program.\n");
             break;
         case 1: // adding
             *RESULT = *OP1 + *OP2;
