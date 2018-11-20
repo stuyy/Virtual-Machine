@@ -30,7 +30,6 @@ void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * RE
         case 10: // BRANCHIFEQUAL
             bit = (buffer[1] & 0x0F) >> 3;
             offset = ((((buffer[1] & 0x0F) << 8) | buffer[2]) << 8) | buffer[3];
-            printf("Program Counter is currently: %d\n", *pc);
             if(bit) // If bit is 1, then it's negative.
             {
                 
@@ -38,13 +37,14 @@ void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * RE
                 offset -= (offset*2);
                 printf("%d\n", offset); // If the offset is negative.
                 if(*RESULT)
-                    *pc += offset;
+                    *pc += (offset-4);
+
+                break;
+                
             }
-            else { // If it's positive, subtract 4
+            else // If it's positive, subtract 4
                 *pc += (offset-4);
-            }
-            printf("Program Counter is now: %d\n", *pc);
-            exit(0);
+            
             break;
         case 11: // BRANCHIFLESS
             bit = (buffer[1] & 0x0F) >> 3;
@@ -55,12 +55,12 @@ void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * RE
                 offset = (~(offset-1)) & ((1<<20)-1);
                 offset -= (offset*2);
                 if(*RESULT)
-                    *pc += offset;
+                    *pc += (offset-4);
+                
             }
-            else {
+            else
                 *pc += (offset-4);
-            }
-            printf("Program Counter is now: %d\n", *pc);
+        
             break;
         case 12:
             *pc = *RESULT; // Set the program counter to where we are jumping.
