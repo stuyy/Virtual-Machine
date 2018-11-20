@@ -28,7 +28,6 @@ int main(int argc, char** argv)
   int programCounter = 0; // Program Counter
   int OP1, OP2;
   int RESULT;
-  int iterater = -2;
   unsigned char buffer[4];
   if(argc != 2)
     printf("Invalid amount of arguments.");
@@ -36,13 +35,12 @@ int main(int argc, char** argv)
   else {
     int byteCount = readFile(argv[1], bytes);
     int flag = 1;
-    int reg = -1;
     while(flag)
     {
-      fetch(bytes, &programCounter, &flag, buffer, &iterater);
+      fetch(bytes, &programCounter, &flag, buffer);
       dispatch(buffer, &OP1, &OP2, REGISTERS, bytes, byteCount);
       execute(buffer, &OP1, &OP2, &RESULT, REGISTERS, &flag);
-      store(buffer, bytes, &RESULT, REGISTERS, &programCounter, &iterater, &OP1, &OP2);
+      store(buffer, bytes, &RESULT, REGISTERS, &programCounter, &OP1, &OP2);
       //printf("The next byte is: %02x\n", bytes[programCounter]);
     }
     

@@ -1,4 +1,4 @@
-void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * REGISTERS, int * pc, int * iter, int *OP1, int * OP2)
+void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * REGISTERS, int * pc, int *OP1, int * OP2)
 {
     int instruction = buffer[0] >> 4;
     int temp;
@@ -49,7 +49,6 @@ void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * RE
         case 11: // BRANCHIFLESS
             bit = (buffer[1] & 0x0F) >> 3;
             offset = ((((buffer[1] & 0x0F) << 8) | buffer[2]) << 8) | buffer[3];
-            printf("Program Counter is currently: %d\n", *pc);
             if(bit) // If bit is 1, then it's negative.
             {
                 offset = (~(offset-1)) & ((1<<20)-1);
@@ -65,6 +64,7 @@ void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * RE
         case 12:
             *pc = *RESULT; // Set the program counter to where we are jumping.
             //printf("Program Counter is now %d\n", *pc);
+            printf("JUMPED. NOW WE'RE AT %d\n", *pc);
             buffer[0] = buffer[1] = buffer[2] = buffer[3] = 0;
             break;
         case 13: // ITERATEOVER
@@ -75,17 +75,10 @@ void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * RE
 
             offset = ((bytes[*RESULT] << 8) | bytes[*RESULT+1]) << 16 | ((bytes[*RESULT+2] << 8) | bytes[*RESULT+3]);
             
-            printf("Offset: %d\n", offset);
-            
             if(offset != 0)
             {
-                printf("Hello?");
-                //REGISTERS[temp] = bytes[*RESULT];
                 REGISTERS[temp] += (*OP1);
-                printf("Jumping back %d instructions\n", *OP2);
-                printf("The program counter is currently %d\n", *pc);
                 *pc = (*pc - 4) - *OP2;
-                printf("program counter is %d\n", *pc);
             }
             break;
         case 14: // LOAD
