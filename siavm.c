@@ -42,7 +42,7 @@ int main(int argc, char** argv)
       fetch(bytes, &programCounter, &flag, buffer, &iterater);
       dispatch(buffer, &OP1, &OP2, REGISTERS, bytes, byteCount);
       execute(buffer, &OP1, &OP2, &RESULT, REGISTERS, &flag);
-      store(buffer, bytes, &RESULT, REGISTERS, &programCounter, &iterater, &OP2);
+      store(buffer, bytes, &RESULT, REGISTERS, &programCounter, &iterater, &OP1, &OP2);
       //printf("The next byte is: %02x\n", bytes[programCounter]);
     }
     

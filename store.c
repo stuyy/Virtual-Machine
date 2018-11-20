@@ -1,4 +1,4 @@
-void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * REGISTERS, int * pc, int * iter, int * OP2)
+void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * REGISTERS, int * pc, int * iter, int *OP1, int * OP2)
 {
     int instruction = buffer[0] >> 4;
     int temp;
@@ -69,12 +69,19 @@ void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * RE
             break;
         case 13: // ITERATEOVER
             printf("\n\n\n\n");
-            printf("We're at %d\n", *RESULT);
             temp = buffer[0] & 0xF;
-            printf("Register #%d\n", temp);
-            if(bytes[*RESULT] != 0)
+
+            printf("%02x %02x %02x %02x\n", bytes[*RESULT], bytes[*RESULT+1], bytes[*RESULT+2], bytes[*RESULT+3]);
+
+            offset = ((bytes[*RESULT] << 8) | bytes[*RESULT+1]) << 16 | ((bytes[*RESULT+2] << 8) | bytes[*RESULT+3]);
+            
+            printf("Offset: %d\n", offset);
+            
+            if(offset != 0)
             {
-                REGISTERS[temp] = bytes[*RESULT];
+                printf("Hello?");
+                //REGISTERS[temp] = bytes[*RESULT];
+                REGISTERS[temp] += (*OP1);
                 printf("Jumping back %d instructions\n", *OP2);
                 printf("The program counter is currently %d\n", *pc);
                 *pc = (*pc - 4) - *OP2;
@@ -91,7 +98,6 @@ void store(unsigned char * buffer, unsigned char * bytes, int * RESULT, int * RE
             bytes[*RESULT+1] = (REGISTERS[temp] >> 16) & 0xFF;
             bytes[*RESULT+2] = (REGISTERS[temp] >> 8) & 0xFF;
             bytes[*RESULT+3] = REGISTERS[temp] & 0xFF;
-            printf("STORING\n");
             // At 1276, we want to store 1524
             break;
     
